@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        /* ==========================================================================
+           ⚙️ CẤU HÌNH NỘI DUNG TẠI ĐÂY (SỬA TRỰC TIẾP TRONG CODE)
+           ========================================================================== */
+        const CONFIG = {
+            // Link ảnh cá nhân/bạn bè (Dán trực tiếp URL ảnh vào đây)
+            IMAGE_URL: 'https://cdn.phototourl.com/member/2026-10-20-e63df3c4-9f75-431d-a716-3f6016ed0f6f.jpg',
+            
+            // Dòng chữ dưới khung ảnh Polaroid
+            PHOTO_CAPTION: 'Rạng Rỡ & Xinh Đẹp ✨',
+
+            // Bài thơ 20/10 nổi bật (Dùng \n để xuống dòng)
+            POEM_TEXT: 'Chúc bạn 20/10 thật rạng rỡ,\nNụ cười luôn thắm tựa ngàn hoa.\nHạnh phúc, thành công và may mắn,\nThế giới vì bạn thêm chan hòa! 💖',
+
+            // Lời chúc gửi tới bạn bè
+            WISH_TEXT: 'Nhân ngày Phụ nữ Việt Nam 20/10, xin gửi tới bạn những lời chúc ấm áp và tuyệt vời nhất. Chúc bạn luôn tự tin, xinh đẹp, giữ vững nụ cười rạng rỡ trên môi và gặt hái thật nhiều thành công, niềm vui trong cuộc sống!'
+        };
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-gold': '#B76E79',
+                        'rose-gold-light': '#E8C5C8',
+                        'rose-gold-dark': '#8A4A53',
+                        'pastel-pink': '#FFF0F3',
+                        'soft-pink': '#FFCCD5',
+                        'gold-accent': '#D4AF37',
+                    },
+                    fontFamily: {
+                        dancing: ['"Dancing Script"', 'cursive'],
+                        playfair: ['"Playfair Display"', 'serif'],
+                        montserrat: ['"Montserrat"', 'sans-serif'],
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(1deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(225, 29, 72, 0.4), 0 0 40px rgba(212, 175, 55, 0.3)' },
+                            '50%': { boxShadow: '0 0 35px rgba(225, 29, 72, 0.7), 0 0 60px rgba(212, 175, 55, 0.6)' }
+                        }
+                    },
+                    animation: {
+                        float: 'float 4s ease-in-out infinite',
+                        pulseGlow: 'pulseGlow 2.5s infinite ease-in-out',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fff2f4 0%, #ffd6e0 50%, #fecdd3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Canvas hiệu ứng hoa rơi & pháo hoa */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Glassmorphism Card Premium */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 25px 50px -12px rgba(183, 110, 121, 0.25),
+                        0 0 35px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Text Gradients */
+        .text-title-gradient {
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 40%, #b76e79 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Khung Polaroid Thanh Lịch */
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 12px 12px 26px 12px;
+            box-shadow: 0 15px 35px rgba(183, 110, 121, 0.2), 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            transform: rotate(-1.5deg);
+            transition: all 0.4s ease;
+        }
+        .polaroid-frame:hover {
+            transform: rotate(0deg) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 20px 40px rgba(183, 110, 121, 0.3);
+        }
+
+        /* Nút Bấm Lớn Nổi Bật */
+        .btn-open-card {
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-open-card:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8 relative">
+
+    <!-- Canvas Animation (Cánh hoa, Trái tim, Pháo hoa) -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- ==========================================================================
+         MÀN HÌNH 1: MÀN HÌNH CHÀO MỪNG (WELCOME SCREEN)
+         ========================================================================== -->
+    <section id="welcomeScreen" class="w-full max-w-lg z-20 transition-all duration-700 ease-out flex flex-col items-center my-auto">
+        <div class="glass-card rounded-3xl p-8 sm:p-12 text-center border-2 border-white/90 w-full animate-float shadow-2xl relative overflow-hidden">
+            
+            <!-- Icon Trang Trí -->
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-tr from-rose-100 to-rose-200 flex items-center justify-center border-2 border-amber-300 shadow-inner">
+                <i class="fa-solid fa-envelope-open-text text-rose-600 text-3xl"></i>
+            </div>
+
+            <!-- Dòng chữ Chúc Mừng -->
+            <span class="text-xs font-bold tracking-widest text-rose-600 uppercase bg-rose-100/80 px-4 py-1.5 rounded-full border border-rose-200 inline-block mb-3">
+                Special Greeting Card
+            </span>
+            <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-title-gradient mb-2 leading-tight">
+                Chúc Mừng Ngày<br>Phụ Nữ Việt Nam 20/10
+            </h1>
+            <p class="font-dancing text-2xl text-rose-800 mb-8 font-semibold">
+                Dành tặng bạn món quà đặc biệt... ✨
+            </p>
+
+            <!-- DUY NHẤT MỘT NÚT BẤM -->
+            <button onclick="openCard()" class="btn-open-card text-white font-montserrat font-bold text-lg sm:text-xl px-10 py-4 rounded-full shadow-2xl animate-pulseGlow flex items-center justify-center gap-3 mx-auto cursor-pointer border border-amber-300/50">
+                <span>Bấm vào đây</span>
+                <i class="fa-solid fa-heart text-amber-300 animate-bounce"></i>
+            </button>
+
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         MÀN HÌNH 2: NỘI DUNG THIỆP CẮT TRANG (CARD CONTENT SCREEN)
+         ========================================================================== -->
+    <main id="cardScreen" class="w-full max-w-3xl relative z-20 hidden opacity-0 scale-95 transition-all duration-700 ease-out my-auto">
+        
+        <div class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 border-2 border-white/90 shadow-2xl flex flex-col justify-between animate-float">
+            
+            <!-- TIÊU ĐỀ THIỆP -->
+            <div class="text-center pb-5 border-b border-rose-200/60 mb-6">
+                <div class="inline-flex items-center justify-center space-x-2 bg-rose-100/80 px-4 py-1.5 rounded-full border border-rose-200/80 mb-3 shadow-sm">
+                    <i class="fa-solid fa-sparkles text-amber-500 text-xs"></i>
+                    <span class="text-xs font-bold tracking-widest text-rose-700 uppercase">Happy Vietnamese Women's Day</span>
+                    <i class="fa-solid fa-sparkles text-amber-500 text-xs"></i>
+                </div>
+                
+                <h1 class="font-playfair text-3xl sm:text-5xl font-bold text-title-gradient mb-1">
+                    Chúc Mừng 20/10
+                </h1>
+                <p class="font-dancing text-2xl sm:text-3xl text-rose-800 font-semibold">
+                    Thần thái - Tự tin - Rạng rỡ
+                </p>
+            </div>
+
+            <!-- NỘI DUNG CHÍNH (KHUNG ẢNH POLAROID + THƠ & LỜI CHÚC) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
+                
+                <!-- CỘT TRÁI: KHUNG ẢNH POLAROID -->
+                <div class="md:col-span-5 flex flex-col items-center">
+                    <div class="polaroid-frame w-full max-w-[240px] sm:max-w-[260px] rounded-2xl relative">
+                        <div class="w-full h-60 sm:h-64 rounded-xl overflow-hidden bg-rose-50 relative">
+                            <img id="cardImage" src="" alt="Hình ảnh 20/10" class="w-full h-full object-cover">
+                            
+                            <div class="absolute top-2 right-2 bg-white/85 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-semibold text-rose-600 shadow-sm flex items-center gap-1 border border-amber-200">
+                                <i class="fa-solid fa-heart text-rose-500"></i> 20/10
+                            </div>
+                        </div>
+                        <p id="cardPhotoCaption" class="font-dancing text-center text-rose-800 font-bold text-xl mt-3 truncate"></p>
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI: THƠ & LỜI CHÚC YÊU THƯƠNG -->
+                <div class="md:col-span-7 flex flex-col justify-center text-center md:text-left">
+                    
+                    <h2 class="font-playfair text-2xl sm:text-3xl font-bold text-title-gradient mb-2">
+                        Luôn Xinh Đẹp & Hạnh Phúc!
+                    </h2>
+                    
+                    <!-- Khung Thơ Nổi Bật -->
+                    <div class="my-3 p-4 rounded-2xl bg-white/80 border border-rose-200/90 shadow-sm relative">
+                        <i class="fa-solid fa-quote-left absolute top-2 left-2 text-rose-200 text-2xl"></i>
+                        <p id="cardPoem" class="font-dancing text-lg sm:text-xl text-rose-800 italic px-3 py-1 leading-relaxed font-semibold whitespace-pre-line"></p>
+                    </div>
+
+                    <!-- Đoạn Văn Lời Chúc -->
+                    <p id="cardWish" class="text-gray-700 text-xs sm:text-sm leading-relaxed my-1 font-normal"></p>
+
+                </div>
+
+            </div>
+
+            <!-- CHÂN TRANG (FOOTER) -->
+            <div class="pt-5 mt-6 border-t border-rose-200/60 text-center">
+                <p class="text-xs text-rose-500 font-medium">
+                    Chúc bạn có một ngày 20/10 trọn vẹn, tràn ngập hoa, quà và niềm vui! ✨
+                </p>
+                <p class="text-[11px] text-rose-400 mt-1 font-light">
+                    Made with <i class="fa-solid fa-heart text-rose-500 mx-0.5"></i> for you
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- JavaScript Render Data & Canvas Effect -->
+    <script>
+        // Render dữ liệu từ CONFIG
+        document.addEventListener('DOMContentLoaded', () => {
+            const imgEl = document.getElementById('cardImage');
+            imgEl.src = CONFIG.IMAGE_URL;
+            imgEl.onerror = function() {
+                this.src = 'https://placehold.co/400x500/ffd6e0/8A4A53?text=Happy+20/10';
+            };
+
+            document.getElementById('cardPhotoCaption').innerText = CONFIG.PHOTO_CAPTION;
+            document.getElementById('cardPoem').innerText = CONFIG.POEM_TEXT;
+            document.getElementById('cardWish').innerText = CONFIG.WISH_TEXT;
+        });
+
+        // Hàm Mở Thiệp khi Bấm Nút "Bấm Vào Đây"
+        function openCard() {
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const cardScreen = document.getElementById('cardScreen');
+
+            // Hiệu ứng ẩn màn hình chào
+            welcomeScreen.classList.add('opacity-0', 'scale-90');
+            
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                
+                // Hiện màn hình thiệp
+                cardScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    cardScreen.classList.remove('opacity-0', 'scale-95');
+                    cardScreen.classList.add('opacity-100', 'scale-100');
+                    
+                    // Bắn pháo hoa ăn mừng
+                    triggerFireworks();
+                }, 50);
+            }, 500);
+        }
+
+        /* ==================== CANVAS HOẠT HỌA CÁNH HOA, TRÁI TIM & PHÁO HOA ==================== */
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class FallingPetal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * 1.3 + 0.6;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.6 + 0.4;
+                this.color = Math.random() > 0.3 ? '#f43f5e' : '#fda4af';
+                this.type = Math.random(); // 0-0.5: cánh hoa, 0.5-0.85: trái tim, 0.85-1: ánh sao
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.type > 0.5 && this.type <= 0.85) {
+                    // Trái tim
+                    ctx.fillStyle = '#e11d48';
+                    ctx.beginPath();
+                    const topCurveHeight = this.size * 0.3;
+                    ctx.moveTo(0, topCurveHeight);
+                    ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                    ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                    ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                    ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (this.type > 0.85) {
+                    // Ánh sao lấp lánh
+                    ctx.fillStyle = '#D4AF37';
+                    ctx.beginPath();
+                    for (let i = 0; i < 4; i++) {
+                        ctx.lineTo(Math.cos((18 + i * 90) * Math.PI / 180) * this.size,
+                                   Math.sin((18 + i * 90) * Math.PI / 180) * this.size);
+                        ctx.lineTo(Math.cos((54 + i * 90) * Math.PI / 180) * (this.size/3),
+                                   Math.sin((54 + i * 90) * Math.PI / 180) * (this.size/3));
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Cánh hoa hồng
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size / 2, this.size, Math.PI / 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        // Khởi tạo hạt pháo hoa bùng nổ khi mở thiệp
+        class FireworkParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = Math.random() * 6 + 2;
+                this.friction = 0.95;
+                this.gravity = 0.12;
+                this.vx = Math.cos(this.angle) * this.speed;
+                this.vy = Math.sin(this.angle) * this.speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.015;
+                this.color = ['#e11d48', '#f43f5e', '#fb7185', '#D4AF37', '#ffffff'][Math.floor(Math.random() * 5)];
+                this.size = Math.random() * 4 + 2;
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        const petals = Array.from({ length: 45 }, () => new FallingPetal());
+        let fireworks = [];
+
+        function triggerFireworks() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            for (let i = 0; i < 90; i++) {
+                fireworks.push(new FireworkParticle(centerX, centerY));
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Render hoa rơi
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+
+            // Render pháo hoa
+            fireworks.forEach((fw, index) => {
+                fw.update();
+                fw.draw();
+                if (fw.alpha <= 0) {
+                    fireworks.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.onload = function() {
+            animateCanvas();
+        };
+    </script>
+</body>
+</html>
